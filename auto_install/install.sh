@@ -696,6 +696,7 @@ setClientDNS() {
             DNS.WATCH "" off
             Norton "" off
 	    FamilyShield "" off
+	    CloudFlare "" off
             Custom "" off)
 
     if DNSchoices=$("${DNSChoseCmd[@]}" "${DNSChooseOptions[@]}" 2>&1 >/dev/tty)
@@ -739,6 +740,13 @@ setClientDNS() {
             echo "::: Using FamilyShield servers."
             OVPNDNS1="208.67.222.123"
             OVPNDNS2="208.67.220.123"
+            $SUDO sed -i '0,/\(dhcp-option DNS \)/ s/\(dhcp-option DNS \).*/\1'${OVPNDNS1}'\"/' /etc/openvpn/server.conf
+            $SUDO sed -i '0,/\(dhcp-option DNS \)/! s/\(dhcp-option DNS \).*/\1'${OVPNDNS2}'\"/' /etc/openvpn/server.conf
+            ;;
+	CloudFlare)
+            echo "::: Using CloudFlare servers."
+            OVPNDNS1="1.1.1.1"
+            OVPNDNS2="1.0.0.1"
             $SUDO sed -i '0,/\(dhcp-option DNS \)/ s/\(dhcp-option DNS \).*/\1'${OVPNDNS1}'\"/' /etc/openvpn/server.conf
             $SUDO sed -i '0,/\(dhcp-option DNS \)/! s/\(dhcp-option DNS \).*/\1'${OVPNDNS2}'\"/' /etc/openvpn/server.conf
             ;;
